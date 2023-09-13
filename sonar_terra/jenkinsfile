@@ -1,8 +1,6 @@
 pipeline {
     agent any
-    parameters {
-        choice(name: 'What_do_you_want', choices: ['Create', 'Destroy'], description: 'Select the environment')
-    }
+    
     tools {
         terraform 'terraform'
     }
@@ -21,16 +19,16 @@ pipeline {
             }
         }
         stage('terra-apply') {
-            when { expression { params.What_do_you_want == 'Create' } }
+        
             steps {
                 sh 'terraform apply --auto-approve'
             }
         }
         stage('terra-destroy') {
-            when { expression { params.What_do_you_want == 'Destroy' } }
+          
                        
             steps {
-                sh 'terraform destroy --auto-approve'
+                sh 'ls'
             }
         }
     }
