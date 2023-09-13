@@ -10,8 +10,8 @@ pipeline {
         
         stage('checkout') {
             steps {
-                // git branch: 'main', url: 'https://github.com/H4rsh99/harsh_sonar.git'
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'edf516e7-b73d-4fb9-97c2-1db0ca2139e5', url: 'https://github.com/H4rsh99/harsh_sonar.git']])
+                 git branch: 'main', url: 'https://github.com/H4rsh99/harsh_sonar.git'
+               // checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'edf516e7-b73d-4fb9-97c2-1db0ca2139e5', url: 'https://github.com/H4rsh99/harsh_sonar.git']])
            
             }
         }
