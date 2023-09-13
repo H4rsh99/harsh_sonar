@@ -24,16 +24,16 @@ pipeline {
             }
         }
         stage('terra-apply') {
-            when { expression { params.What_do_you_want == 'Create' } }
+            
             steps {
                 sh 'terraform apply --auto-approve'
             }
         }
-        stage('terra-destroy') {
-            when { expression { params.What_do_you_want == 'Destroy' } }
+        stage('list') {
+         
                        
             steps {
-                sh 'terraform destroy --auto-approve'
+                sh 'ls'
             }
         }
     }
