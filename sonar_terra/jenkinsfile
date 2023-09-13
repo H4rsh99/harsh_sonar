@@ -7,61 +7,31 @@ pipeline {
         terraform 'terraform'
     }
     stages {
-        stage('Checkout') {
+        
+        stage('checkout') {
             steps {
-                script {
-                    // Clean workspace before checking out
-                    deleteDir()
-
-                    // Checkout the Git repository
-                    checkout([$class: 'GitSCM',
-                              branches: [[name: 'main']],
-                              userRemoteConfigs: [[url: 'https://github.com/H4rsh99/harsh_sonar.git']]])
-                }
+                // git branch: 'root_module', url: 'https://github.com/dxjangra/terraform_tool.git'
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'edf516e7-b73d-4fb9-97c2-1db0ca2139e5', url: 'https://github.com/H4rsh99/harsh_sonar.git']])
+           
             }
         }
-
-        stage('Terraform Init') {
+        stage('terra-init') {
             steps {
-                script {
-                    // Change to the directory where your Terraform configuration files are located
-                    dir('sonar_terra/main.tf') {
-                        // Initialize Terraform
-                        sh 'terraform init'
-                    }
-                }
+                sh 'terraform init -reconfigure'
             }
         }
-
-        stage('Terraform Apply') {
-            when {
-                expression { params.What_do_you_want == 'Create' }
-            }
+        stage('terra-apply') {
+            when { expression { params.What_do_you_want == 'Create' } }
             steps {
-                script {
-                    // Change to the directory where your Terraform configuration files are located
-                    dir('sonar_terra/main.tf') {
-                        // Apply Terraform configuration
-                        sh 'terraform apply --auto-approve'
-                    }
-                }
+                sh 'terraform apply --auto-approve'
             }
         }
-
-        stage('Terraform Destroy') {
-            when {
-                expression { params.What_do_you_want == 'Destroy' }
-            }
+        stage('terra-destroy') {
+            when { expression { params.What_do_you_want == 'Destroy' } }
+                       
             steps {
-                script {
-                    // Change to the directory where your Terraform configuration files are located
-                    dir('sonar_terra/main.tf') {
-                        // Destroy Terraform resources
-                        sh 'terraform destroy --auto-approve'
-                    }
-                }
+                sh 'terraform destroy --auto-approve'
             }
         }
     }
 }
-
