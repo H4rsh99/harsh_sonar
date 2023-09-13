@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    parameters {
-        choice(name: 'What_do_you_want', choices: ['Create', 'Destroy'], description: 'Select the environment')
-    }
     tools {
         terraform 'terraform'
     }
