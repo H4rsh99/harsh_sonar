@@ -1,28 +1,37 @@
 pipeline {
-  agent any
-  options {
-    skipDefaultCheckout(true)
-  }
-  stages{
-    stage('clean workspace') {
-      steps {
-        cleanWs()
-      }
+    agent any
+    parameters {
+        choice(name: 'What_do_you_want', choices: ['Create', 'Destroy'], description: 'Select the environment')
     }
-    stage('checkout') {
-      steps {
-        checkout scm
-      }
+    tools {
+        terraform 'terraform'
     }
-    stage('terraform') {
-      steps {
-        sh './terraformw apply -auto-approve -no-color'
-      }
+    stages {
+        
+        stage('checkout') {
+            steps {
+               
+                checkout scmGit(branches: [[name: '*/root_module']], extensions: [], userRemoteConfigs: [[credentialsId: 'edf516e7-b73d-4fb9-97c2-1db0ca2139e5', url: 'https://github.com/dxjangra/terraform_tool.git']])
+           
+            }
+        }
+        stage('terra-init') {
+            steps {
+                sh 'terraform init -reconfigure'
+            }
+        }
+        stage('terra-apply') {
+            when { expression { params.What_do_you_want == 'Create' } }
+            steps {
+                sh 'terraform apply --auto-approve'
+            }
+        }
+        stage('terra-destroy') {
+            when { expression { params.What_do_you_want == 'Destroy' } }
+                       
+            steps {
+                sh 'terraform destroy --auto-approve'
+            }
+        }
     }
-  }
-  post {
-    always {
-      cleanWs()
-    }
-  }
 }
