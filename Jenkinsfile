@@ -26,7 +26,7 @@ pipeline {
             steps {
                 dir('harsh_sonar') {
                     // Change to the directory where your Terraform configuration files are located
-                    sh 'terraform destroy --auto-approve'
+                    sh 'terraform apply--auto-approve'
                 }
             }
         }
